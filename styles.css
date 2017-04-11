@@ -1,0 +1,212 @@
+* {
+	box-sizing: border-box;
+	font-family: 'Lato', Helvetica, sans-serif;
+  	color: #fff;
+  	line-height: 1.5;
+}
+
+/* looks better in colours
+img {
+	filter: grayscale(0%);
+}
+*/
+
+.addbutton {
+	position: relative;
+}
+
+.search-again {
+	position: absolute;
+	bottom: 0;
+	right: 12%;
+}
+
+.search-again:hover {
+	cursor: pointer;
+}
+
+.gradient {
+    background: linear-gradient(#E0C762, #E17539); /* Standard syntax */
+    background: -webkit-linear-gradient(#E0C762, #E17539); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#E0C762, #E17539); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#E0C762, #E17539); /* For Firefox 3.6 to 15 */
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.suntimes-container {
+   	padding-left: 10%;
+   	
+}
+
+.addbutton {
+   	padding-right: 10%;
+   	padding-bottom: 19%;
+   	line-height: 200px;
+}
+
+button, input{
+	color: #E17539;
+}
+
+button.js-button {
+    height: 25px;
+    border-radius: 3px;
+    margin-left: 10px;
+    background-color: white;
+    font-size: 75%;
+    text-align: center;
+}
+
+button.js-button:hover {
+	background-color: #dbd6d6;
+	cursor: pointer;
+}
+
+input.js-query {
+    width: 15%;
+    height: 27px;
+    font-size: 90%;
+    padding-left: 10px;
+}
+
+html {
+    height: 100%;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    display: inline;
+    padding-right: 20px;
+}
+
+
+h2 {
+	font-weight: 500;
+	padding-left: 10%;
+	letter-spacing: 3px;
+	margin-bottom: 8px;
+	size: 120%;
+}
+
+#map {
+	height: 300px;
+	width: 300px;
+	margin: auto;
+}
+
+.js-query {
+	margin-top: 3%;
+	border-radius: 4px;
+
+}
+
+.js-form {
+	padding-top: 12.5%;
+	text-align: center;
+}
+
+footer {
+	text-align: center;
+	font-size: 80%;
+	list-style: none;
+}
+
+p.sun-times {
+	text-align: left;
+	font-size: 1.8em;
+	font-family: 'Lato', sans-serif;
+	font-weight: 500px;
+	line-height: 95%
+}
+
+p.search-again {
+	margin bottom: 0;
+	font-size: 1.6em;
+	font-weight: 600;
+	text-align: right;
+
+}
+.venue-image { 
+   position: relative; 
+   height: 300px;
+   width: 300px; 
+   background-color: #CAD1D0;
+   margin: 0 auto 50px;
+   box-shadow: 0px 10px 22px -2px rgba(92,90,92,1);
+}
+
+/* figure out if nicer with border or not
+
+img {border: 8px solid #fff;}
+
+*/
+
+h4 { 
+   position: absolute; 
+   top: 200px; 
+   left: 0; 
+   width: 100%; 
+   line-height: 2;
+   font-weight: 300;
+
+
+}
+
+h4 span { 
+   color: white; 
+   letter-spacing: 0px;  
+   background: rgb(0, 0, 0); /* fallback color */
+   background: #E17539;
+   padding: 5px; 
+}
+
+h4 span.spacer {
+   padding:0 5px;
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+.result-container {
+	/*border: 2px solid grey;*/
+	border-radius: 3px;
+	/*background:  linear-gradient(
+  		rgba(225, 117, 57, 0.4),
+  		rgba(225, 117, 57, 0.7)
+    );*/
+    height: 200px;
+    margin-top: 4%; 
+    margin-bottom: 3%;
+}
+
+.img-container {
+    line-height: 198px;
+}
+
+.sun-times {
+	vertical-align: middle;
+}
+
+/*html { 
+  background: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.1)
+    ),
+    url(background2.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}*/
+
+
