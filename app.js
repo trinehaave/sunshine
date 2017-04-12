@@ -12,8 +12,12 @@ var state = {
 	latitudeNum: 0,
 	sunrise: "",
 	sunset: "",
+	twilightBegin: "",
+	twilightEnd: "",
 	adjustedSunrise: "",
 	adjustedSunset: "",
+	adjustedTwilightBegin: "",
+	adjustedTwilightEnd: "",
 	adjustedCurrentTime: "",
 	adjustedCurrentTimeAmPm: "",
 	solar_noon: "",
@@ -122,6 +126,8 @@ function addSunResults(data) {
 	state.sunset = data.results.sunset;
 	state.solar_noon = data.results.solar_noon;
 	state.day_length = data.results.day_length;
+	state.twilightBegin = data.results.astronomical_twilight_begin;
+	state.twilightEnd = data.results.astronomical_twilight_end;
 
 //call function to get timezone data
 	getDataFromTimezoneAPI();
@@ -167,10 +173,19 @@ function passTimeZoneToState(data) {
 	state.totalOffset = (data.dstOffset + data.rawOffset)/60;
 	state.adjustedSunrise = moment.utc(state.sunrise, ["h:mm:ss A"]).utcOffset(state.totalOffset).format('h.mm A');
 	state.adjustedSunset = moment.utc(state.sunset, ["h:mm:ss A"]).utcOffset(state.totalOffset).format('h.mm A');
+	state.adjustedTwilightBegin = moment.utc(state.twilightBegin, ["h:mm:ss A"]).utcOffset(state.totalOffset).format('h.mm A');
+	state.adjustedTwilightEnd = moment.utc(state.twilightEnd, ["h:mm:ss A"]).utcOffset(state.totalOffset).format('h.mm A');
 	state.adjustedCurrentTimeAmPm = moment.utc().utcOffset(state.totalOffset).format('h.mm A');
 	state.adjustedCurrentTime = moment.utc().utcOffset(state.totalOffset).format('h:mm');
 
-	$('.js-suntimes-results').append("<div class='sun-times'><p class='sun-times'><b>" + state.formatted_address + "</b></br>Current: " + state.adjustedCurrentTimeAmPm + "</br>Sunrise: " + state.adjustedSunrise + "</br>Sunset: " + state.adjustedSunset + "</p></div>");
+	var address = state.formatted_address;
+
+	if (state.formatted_address.length > 45) {
+		address = state.formatted_address.slice(0, 45) + '...';
+	}
+
+
+	$('.js-suntimes-results').append("<div class='sun-times'><p class='sun-times'><b>" + address + "</b></br>Current: " + state.adjustedCurrentTimeAmPm + "</br>Sunrise: " + state.adjustedSunrise + "</br>Sunset: " + state.adjustedSunset + "</p></div>");
 	$('.addbutton').append('<p class="search-again">New search</p>');
 
 
@@ -184,28 +199,45 @@ function passTimeZoneToState(data) {
 
 function displayFourResults(data) {
 
-	if(data.response.groups && data.response.groups.length > 0 && data.response.groups[0].items && data.response.groups[0].items.length > 0) {
+	if (data.response.groups && data.response.groups.length > 0 && data.response.groups[0].items && data.response.groups[0].items.length > 0) {
 
-		for(var i = 0; i < data.response.groups[0].items.length; i++) {
+		for (var i = 0; i < data.response.groups[0].items.length; i++) {
 
 
-			if(data.response.groups[0].items[i].venue.photos.groups && 
+			if (	data.response.groups[0].items[i].venue.photos.groups && 
 				data.response.groups[0].items[i].venue.photos.groups.length > 0 && 
 				data.response.groups[0].items[i].venue.photos.groups[0].items &&
-				 data.response.groups[0].items[i].venue.photos.groups[0].items.length > 0 ) {
+				data.response.groups[0].items[i].venue.photos.groups[0].items.length > 0 ) {
 
 				var startResults = data.response.groups[0].items[i].venue;
 				var startImage = data.response.groups[0].items[i].venue.photos.groups[0].items[0];
 
 				if (i < 9) {
-					$('.row-1').append('<div class="col-4"><div class="venue-image"><a href=" http://foursquare.com/v/' + startResults.id + '?ref=' + state.client_id + '""><img src="' +
-						startImage.prefix + '300x300' + startImage.suffix + '" alt="image of ' + startResults.name + ' class="desaturate">' +
-						'<h4><span>' +
-						startResults.name  +
-						'<span class="spacer"></span><br><span class="spacer"></span>' +
-						startResults.categories[0].name  + 
-						'<span></h4></a></div></div>')
+					if (startResults.name.length < 30) {
+
+						$('.row-1').append('<div class="col-4"><div class="venue-image"><a href=" http://foursquare.com/v/' + startResults.id + '?ref=' + state.client_id + '""><img src="' +
+							startImage.prefix + '300x300' + startImage.suffix + '" alt="image of ' + startResults.name + ' class="desaturate">' +
+							'<h4><span>' +
+							startResults.name  +
+							'<span class="spacer"></span><br><span class="spacer"></span>' +
+							startResults.categories[0].name  + 
+							'<span></h4></a></div></div>')
+
+					} else {
+						
+						var venueName = startResults.name.slice(0, 30) + '...';
+
+						$('.row-1').append('<div class="col-4"><div class="venue-image"><a href=" http://foursquare.com/v/' + startResults.id + '?ref=' + state.client_id + '""><img src="' +
+							startImage.prefix + '300x300' + startImage.suffix + '" alt="image of ' + startResults.name + ' class="desaturate">' +
+							'<h4><span>' +
+							venueName  +
+							'<span class="spacer"></span><br><span class="spacer"></span>' +
+							startResults.categories[0].name  + 
+							'<span></h4></a></div></div>')
+					}
+
 				} 
+
 			}
 		}
 	}
@@ -256,28 +288,8 @@ function timeInSeconds(time) {
 	return seconds;
 }
 
-//background of app changes dynamically according to what time of the day it is and how close that time is to midnight, sunset and sunrise
-//calculate the current color as a mix between to colors (for instance the mix between the colors for midnight and sunrise)
-//values are changed from hex to rgb and back to hex
-function mixColors(color1, color2, ratio1, ratio2) {
- 
-  function hex(x) {
-      x = x.toString(16);
-      return (x.length == 1) ? '0' + x : x;
-  };
 
-  var r = Math.ceil(parseInt(color1.substring(0,2), 16) * ratio1 + parseInt(color2.substring(0,2), 16) * ratio2);
-  var g = Math.ceil(parseInt(color1.substring(2,4), 16) * ratio1 + parseInt(color2.substring(2,4), 16) * ratio2);
-  var b = Math.ceil(parseInt(color1.substring(4,6), 16) * ratio1 + parseInt(color2.substring(4,6), 16) * ratio2);
-
-  var middle = hex(r) + hex(g) + hex(b);
-
-  console.log(middle);
-
-  return middle;
-} 
-
-//set 6 different phases of day and use current time of day to calculate how far along into a phase the day is
+//set 8 different phases of day and use current time of day to calculate how far along into a phase the day is
 //use this to calculate the ratio between colors to be used for the linear-gradient in the background of the results page
 //for example if current time is 60% into phase 3, use 40% of phase 3 top and bottom color and mix with 60% of phase 4 top and bottom color
 
@@ -287,22 +299,42 @@ function getRatioAndColors() {
 //use these variables to call the timeInSeconds function
 	var sunrise = moment.utc(state.sunrise, ["h:mm:ss A"]).utcOffset(state.totalOffset).format('H:mm');
 	var sunset = moment.utc(state.sunset, ["h:mm:ss A"]).utcOffset(state.totalOffset).format('H:mm');
+	var twilightBegin = moment.utc(state.twilightBegin, ["h:mm:ss A"]).utcOffset(state.totalOffset).format('H:mm');
+	var twilightEnd = moment.utc(state.twilightEnd, ["h:mm:ss A"]).utcOffset(state.totalOffset).format('H:mm');
 	var current = moment.utc().utcOffset(state.totalOffset).format('H:mm');
 	
 //phaseduration calculations
 	var hourInSeconds = 60 * 60;
 	var sunriseInSeconds = timeInSeconds(sunrise);
 	var sunsetInSeconds = timeInSeconds(sunset);
+	var twilightBeginInSeconds = timeInSeconds(twilightBegin);
+	var twilightEndInSeconds = timeInSeconds(twilightEnd);
 	var currentInSeconds = timeInSeconds(current);
+
+
 	var sunriseStart = sunriseInSeconds - hourInSeconds;
 	var sunriseEnd = sunriseInSeconds + hourInSeconds;
 	var sunsetStart = sunsetInSeconds - hourInSeconds;
-	var sunsetEnd = sunsetInSeconds - hourInSeconds;
+	var sunsetEnd = sunsetInSeconds + hourInSeconds;
+	var twilightMorningStart = twilightBeginInSeconds;
+	var twilightEveningEnd = twilightEndInSeconds;
 	var halfDay = (sunsetStart - sunriseEnd) / 2;
 	var dayTurn = sunriseEnd + halfDay;
 	var dayInSeconds = 24 * hourInSeconds;
+
+	console.log(twilightMorningStart + ' 1');
+	console.log(sunriseStart + ' 2');
+	console.log(sunriseEnd + ' 3');
+	console.log(dayTurn + ' 4');
+	console.log(sunsetStart + ' 5');
+	console.log(sunsetEnd + ' 6');
+	console.log(twilightEveningEnd + ' 7');
+	console.log(currentInSeconds + ' 8');
 	
-	//colors
+
+	//colors for the different phases
+	var twilightMorningTop = "A346C5";
+	var twilightMorningBottom = "F3902B";
  	var sunriseTop = "85E6C4";
 	var sunriseBottom = "E1C139";
 	var lateSunriseTop = "C4EEE6";
@@ -313,6 +345,8 @@ function getRatioAndColors() {
 	var earlySunsetBottom = "A88E49";
 	var sunsetTop = "E0C762";
 	var sunsetBottom = "E17539";
+	var twilightEveningTop = "AD3F7E";
+	var twilightEveningBottom = "D76041";
 	var midnightTop = "5C82B2";
 	var midnightBottom = "061931";
 	 
@@ -322,51 +356,85 @@ function getRatioAndColors() {
 //find which phase current time is in
 
 	//phase 1
-		if(currentInSeconds < sunriseStart && currentInSeconds >= 0) {
+		if(currentInSeconds < twilightMorningStart && currentInSeconds >= 0) {
 
-			ratio2 = currentInSeconds / (sunriseStart - 0);
+			ratio2 = currentInSeconds / twilightMorningStart; //calculate how far into the phase the current time is --> use for calculating the ratio of the two top and two botton colors when they are mixed
 				state.top1 = midnightTop;
 				state.bottom1 = midnightBottom;
+				state.top2 = twilightMorningTop;
+				state.bottom2 = twilightMorningBottom;
+
+				console.log('phase1');
+
+	//phase 2
+		} else if(currentInSeconds < sunriseStart && currentInSeconds >= twilightMorningStart) {
+
+			ratio2 = (currentInSeconds - twilightMorningStart) / (sunriseStart - twilightMorningStart);
+				state.top1 = twilightMorningTop;
+				state.bottom1 = twilightMorningBottom;
 				state.top2 = sunriseTop;
 				state.bottom2 = sunriseBottom;
-	//phase 2
+
+				console.log('phase2');
+	//phase 3
 		} else if (currentInSeconds >= sunriseStart && currentInSeconds <= sunriseEnd) {
 			ratio2 = (currentInSeconds - sunriseStart) / (sunriseEnd - sunriseStart);
 				state.top1 = sunriseTop;
 				state.bottom1 = sunriseBottom;
 				state.top2 = lateSunriseTop;
 				state.bottom2 = lateSunriseBottom;
-	//phase 3
+
+				console.log('phase3');
+	//phase 4
 		} else if(currentInSeconds > sunriseEnd && currentInSeconds < dayTurn) {
 			ratio2 = (currentInSeconds - sunriseEnd) / (dayTurn - sunriseEnd);
 				state.top1 = lateSunriseTop;
 				state.bottom1 = lateSunriseBottom;
 				state.top2 = dayTurnTop;
 				state.bottom2 = dayTurnBottom;
-	//phase 4	
+
+				console.log('phase4');
+	//phase 5	
 		} else if(currentInSeconds >= dayTurn && currentInSeconds <= sunsetStart) {
 			ratio2 = (currentInSeconds - dayTurn) / (sunsetStart - dayTurn);
 				state.top1 = dayTurnTop;
 				state.bottom1 = dayTurnBottom;
 				state.top2 = earlySunsetTop;
 				state.bottom2 = earlySunsetBottom;
-	//phase 5
+
+				console.log('phase5');
+
+	//phase 6
 		} else if(currentInSeconds > sunsetStart && currentInSeconds < sunsetEnd) {
 			ratio2 = (currentInSeconds - sunsetStart) / (sunsetEnd - sunsetStart);
 				state.top1 = earlySunsetTop;
 				state.bottom1 = earlySunsetBottom;
 				state.top2 = sunsetTop;
 				state.bottom2 = sunsetBottom;
-	//phase 6
-		} else if(currentInSeconds > sunsetEnd && currentInSeconds <= dayInSeconds) {
-			ratio2 =(currentInSeconds - sunsetEnd) / (dayInSeconds - sunsetEnd);
+
+				console.log('phase6');
+
+	//phase 7
+		} else if(currentInSeconds > sunsetEnd && currentInSeconds <= twilightEveningEnd) {
+			ratio2 =(currentInSeconds - sunsetEnd) / (twilightEveningEnd - sunsetEnd);
 				state.top1 = sunsetTop;
 				state.bottom1 = sunsetBottom;
+				state.top2 = twilightEveningTop;
+				state.bottom2 =  twilightEveningBottom;
+
+				console.log('phase7');
+
+	//phase 8
+		} else if(currentInSeconds > twilightEveningEnd && currentInSeconds <= dayInSeconds) {
+			ratio2 =(currentInSeconds - twilightEveningEnd) / (dayInSeconds - twilightEveningEnd);
+				state.top1 = twilightEveningTop;
+				state.bottom1 = twilightEveningBottom;
 				state.top2 = midnightTop;
 				state.bottom2 =  midnightBottom;
-		}
 
-	ratio1 = 1 - ratio2;
+				console.log('phase8');
+
+		}
 
 //set the colors to be used for background linear gradient
 	state.currentTopColor = mixColors(state.top1, state.top2, ratio1, ratio2);
@@ -383,6 +451,29 @@ function getRatioAndColors() {
 $('.addbutton').on('click', '.search-again', function() {
     location.reload(true);
 });
+
+//background of app changes dynamically according to what time of the day it is and how close that time is to midnight, sunset and sunrise
+//calculate the current color as a mix between to colors (for instance the mix between the colors for midnight and sunrise)
+//values are changed from hex to rgb and back to hex
+function mixColors(color1, color2, ratio1, ratio2) {
+	
+	var ratio1 = 1 - ratio2;
+
+  	function hex(x) {
+      	x = x.toString(16);
+      	return (x.length == 1) ? '0' + x : x;
+  	};
+
+  	var r = Math.ceil(parseInt(color1.substring(0,2), 16) * ratio1 + parseInt(color2.substring(0,2), 16) * ratio2);
+  	var g = Math.ceil(parseInt(color1.substring(2,4), 16) * ratio1 + parseInt(color2.substring(2,4), 16) * ratio2);
+  	var b = Math.ceil(parseInt(color1.substring(4,6), 16) * ratio1 + parseInt(color2.substring(4,6), 16) * ratio2);
+
+  	var middle = hex(r) + hex(g) + hex(b);
+
+  	console.log(middle);
+
+  	return middle;
+} 
 
 //get map from google maps API with custom styling
 function initMap() {
