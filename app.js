@@ -68,7 +68,6 @@ function getDataFromGeocodeAPI(locationSearch, callback) {
 		address: state.location,
 	}
 
-	console.log(locationQuery.address);
 	$.getJSON(state.GOOGLE_GEOLOCATION_BASE_URL, locationQuery, passGeoToState);
 };
 
@@ -81,8 +80,6 @@ function getDataFromSunriseAPI(callback) {
 	}
 
 	$.getJSON(state.SUNSET_SUNRISE_BASE_URL, sunQuery, callback);
-
-	console.log('getDataFromSunriseAPI function running');
 
 };
 
@@ -101,8 +98,6 @@ function getDataFromFoursquareAPI() {
 	}
 
 	$.getJSON(state.FOURSQUARE_BASE_URL, venueQuery, displayFourResults);
-	console.log(venueQuery);
-	console.log('getDataFromSunriseAPI');
 }
 
 
@@ -147,7 +142,6 @@ function getDataFromTimezoneAPI(callback) {
 	state.latAndLng = state.latShort + "," + state.lngShort;
 
 	state.timeInSeconds = moment().unix();
-	console.log(state.timeInSeconds);
 
 	var timezoneQuery = {
 		key: state.timeZoneApiKey,
@@ -164,7 +158,6 @@ function getDataFromTimezoneAPI(callback) {
 
 function passTimeZoneToState(data) {
 	
-	console.log(data);
 
 	state.dstOffset = data.dstOffset;
 	state.rawOffset = data.rawOffset;
@@ -255,18 +248,12 @@ function displayFourResults(data) {
 function watchSubmit() {
 	 $('.js-search-form').submit(function(event) {
 		event.preventDefault();
-
-		console.log('hi');
 		var locationQuery = $('.js-query').val();
-
-		console.log(locationQuery);
 		state.location = locationQuery;
-		console.log(state.location);
 		getDataFromGeocodeAPI(locationQuery, passGeoToState);
 		$('.js-query').val('');
 		$('.js-form').remove();
 
-	console.log(moment.utc().format());
 	});
 }
 
@@ -320,26 +307,16 @@ function getRatioAndColors() {
 	var twilightEveningEnd = twilightEndInSeconds;
 	var halfDay = (sunsetStart - sunriseEnd) / 2;
 	var dayTurn = sunriseEnd + halfDay;
-	var dayInSeconds = 24 * hourInSeconds;
-
-	console.log(twilightMorningStart + ' 1');
-	console.log(sunriseStart + ' 2');
-	console.log(sunriseEnd + ' 3');
-	console.log(dayTurn + ' 4');
-	console.log(sunsetStart + ' 5');
-	console.log(sunsetEnd + ' 6');
-	console.log(twilightEveningEnd + ' 7');
-	console.log(currentInSeconds + ' 8');
-	
+	var dayInSeconds = 24 * hourInSeconds;	
 
 	//colors for the different phases
 	var twilightMorningTop = "A346C5";
 	var twilightMorningBottom = "F3902B";
  	var sunriseTop = "85E6C4";
 	var sunriseBottom = "E1C139";
-	var lateSunriseTop = "C4EEE6";
-	var lateSunriseBottom = "E4DF50";
-	var dayTurnTop = "A4EDD9";
+	var lateSunriseTop = "85E6A0";
+	var lateSunriseBottom = "CEC424";
+	var dayTurnTop = "92DBD9";
 	var dayTurnBottom = "4871C9";
 	var earlySunsetTop = "82A5D7";
 	var earlySunsetBottom = "A88E49";
@@ -364,7 +341,6 @@ function getRatioAndColors() {
 				state.top2 = twilightMorningTop;
 				state.bottom2 = twilightMorningBottom;
 
-				console.log('phase1');
 
 	//phase 2
 		} else if(currentInSeconds < sunriseStart && currentInSeconds >= twilightMorningStart) {
@@ -375,7 +351,7 @@ function getRatioAndColors() {
 				state.top2 = sunriseTop;
 				state.bottom2 = sunriseBottom;
 
-				console.log('phase2');
+
 	//phase 3
 		} else if (currentInSeconds >= sunriseStart && currentInSeconds <= sunriseEnd) {
 			ratio2 = (currentInSeconds - sunriseStart) / (sunriseEnd - sunriseStart);
@@ -384,7 +360,6 @@ function getRatioAndColors() {
 				state.top2 = lateSunriseTop;
 				state.bottom2 = lateSunriseBottom;
 
-				console.log('phase3');
 	//phase 4
 		} else if(currentInSeconds > sunriseEnd && currentInSeconds < dayTurn) {
 			ratio2 = (currentInSeconds - sunriseEnd) / (dayTurn - sunriseEnd);
@@ -393,7 +368,7 @@ function getRatioAndColors() {
 				state.top2 = dayTurnTop;
 				state.bottom2 = dayTurnBottom;
 
-				console.log('phase4');
+
 	//phase 5	
 		} else if(currentInSeconds >= dayTurn && currentInSeconds <= sunsetStart) {
 			ratio2 = (currentInSeconds - dayTurn) / (sunsetStart - dayTurn);
@@ -402,7 +377,7 @@ function getRatioAndColors() {
 				state.top2 = earlySunsetTop;
 				state.bottom2 = earlySunsetBottom;
 
-				console.log('phase5');
+
 
 	//phase 6
 		} else if(currentInSeconds > sunsetStart && currentInSeconds < sunsetEnd) {
@@ -412,7 +387,6 @@ function getRatioAndColors() {
 				state.top2 = sunsetTop;
 				state.bottom2 = sunsetBottom;
 
-				console.log('phase6');
 
 	//phase 7
 		} else if(currentInSeconds > sunsetEnd && currentInSeconds <= twilightEveningEnd) {
@@ -422,7 +396,6 @@ function getRatioAndColors() {
 				state.top2 = twilightEveningTop;
 				state.bottom2 =  twilightEveningBottom;
 
-				console.log('phase7');
 
 	//phase 8
 		} else if(currentInSeconds > twilightEveningEnd && currentInSeconds <= dayInSeconds) {
@@ -432,7 +405,6 @@ function getRatioAndColors() {
 				state.top2 = midnightTop;
 				state.bottom2 =  midnightBottom;
 
-				console.log('phase8');
 
 		}
 
@@ -470,8 +442,6 @@ function mixColors(color1, color2, ratio1, ratio2) {
 
   	var middle = hex(r) + hex(g) + hex(b);
 
-  	console.log(middle);
-
   	return middle;
 } 
 
@@ -479,7 +449,6 @@ function mixColors(color1, color2, ratio1, ratio2) {
 function initMap() {
 	
 	var location = {lat: Number(state.latitude), lng: Number(state.longitude)};
-	console.log(location);
 	var map = new google.maps.Map(document.getElementById('map'), {
 	  zoom: 2,
 	  center: location,
