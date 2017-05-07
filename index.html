@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Document</title>
+	<title>Sunshine - A new way to discover outdoor places</title>
 
 	<!-- styles -->
 	<link rel="stylesheet" href="styles.css">
@@ -13,67 +14,66 @@
 	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lora|Source+Code+Pro" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic" rel="stylesheet">
 
-
 </head>
+
 <body class="js-add-style gradient">
-<div class="row js-append-form">
-	<div class="col-12 js-form">
-		<h1>Chase the Rays</h1>
-		<p>Enter a location to find the sunrise and sunset times for today and<br>get suggestions for places in the area to go enjoy the sun</p>
-		<form class="js-search-form">
-			<label for="query"></label>
-			<input type="text" class="js-query" placeholder="location" required>
-			<button type="submit" class="js-button">Search</button>		
-		</form>
-	</div>
-</div>
-<div class="row">
-	<div class="col-4">
-		<div class="result-container js-hidden hidden">
-			<div class=" suntimes-container">
-				<div class="js-suntimes-results"></div>
-			</div>
+	<div class="row js-append-form">
+		<div class="col-12 js-form">
+			<h1>Chase the Rays</h1>
+			<p>Enter a location to find the sunrise and sunset times for today and<br>get suggestions for places in the area to go enjoy the sun</p>
+			<form class="js-search-form">
+				<input type="text" class="js-query" placeholder="location" required>
+				<button type="submit" class="js-button">Search</button>
+			</form>
 		</div>
 	</div>
-	<div class="col-4"></div>
-	<div class="col-4 addbutton"></div>
-</div>
-<div class="row js-hidden hidden"">
-		<div class="col-4"><h2>PLACES</h2></div>
+	<div class="row">
+		<div class="col-4">
+			<div class="result-container js-hidden hidden">
+				<div class=" suntimes-container">
+					<div class="js-suntimes-results"></div>
+				</div>
+			</div>
+		</div>
 		<div class="col-4"></div>
-		<div class="col-4"></div>
+		<div class="col-4 addbutton"></div>
 	</div>
-<div class="js-search-results">
-	<div class="row row-1">
+	<div class="row js-hidden hidden">
+		<div class="col-4 "><h2>PLACES</h2></div>
+		<div class="col-4 "></div>
+		<div class="col-4 "></div>
+	</div>
+<div class="js-search-results ">
+	<div class="row row-1 ">
 	</div>
 
-	<div class="row row-2">
-		<div class="col-4 js-add-map"></div>
-		<div class="col-4"></div>
-		<div class="col-4"></div>
+	<div class="row row-2 ">
+		<div class="col-4 js-add-map "></div>
+		<div class="col-4 "></div>
+		<div class="col-4 "></div>
 	</div>
 
-	<div class="row row-3">	
+	<div class="row row-3">
 	</div>
-	
+
 </div>
 	<div class="row">
-		<div class="col-12">
+		<div class="col-12 ">
 			<footer class="js-hidden hidden">
 				<ul>
-					<li><a href="http://sunrise-sunset.org/api">Sunrise Sunset API</a></li>
-					<li><a href="https://developer.foursquare.com/">Foursquare API</a></li>
-					<li><a href="https://developers.google.com/maps/">Google Maps API</a></li>
-					<li><a href="https://developers.google.com/maps/documentation/timezone/intro">Google Maps Time Zone API</a></li>
-					<li><a href="https://developers.google.com/maps/documentation/geocoding/start">Google Geocoding API</a></li>
+					<li><a href="http://sunrise-sunset.org/api ">Sunrise Sunset API</a></li>
+					<li><a href="https://developer.foursquare.com/ ">Foursquare API</a></li>
+					<li><a href="https://developers.google.com/maps/ ">Google Maps API</a></li>
+					<li><a href="https://developers.google.com/maps/documentation/timezone/intro ">Google Maps Time Zone API</a></li>
+					<li><a href="https://developers.google.com/maps/documentation/geocoding/start ">Google Geocoding API</a></li>
 				</ul>
 			</footer>
 		</div>
 	</div>
  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
- <script src="app.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js "></script>
  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADtTrg7QCT61wFqPVZfbojoaLjrxS0SWg&callback="></script>
+ <script src="app.js "></script>
 </script>
 </body>
 </html>
