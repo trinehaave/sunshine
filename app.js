@@ -388,7 +388,7 @@ jQuery(document).ready(function ($) {
       padding: '5px'
     })
     $('.search-again').css({
-      color: '#' + state.currentBottomColor
+      color: '#fff'
     })
   }
 
