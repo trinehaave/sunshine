@@ -1,5 +1,3 @@
-// TODO set limit for how many letter there can be in the name of venue and in the name of the location, use ... at the end after a given amount of letters
-
 jQuery(document).ready(function ($) {
   // state object
   var state = {
