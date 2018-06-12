@@ -6,6 +6,7 @@ The background gradient is dynamic and is calculated based on the current time o
 
 
 ## Screenshots
-![hawaii](./images/Hawaii.png)
 
-![siem Reap](./images/SiemReapNew.png)
+![siem reap](./images/SiemReapNew.png)
+
+![stradbroke](./images/StradbrokeNew.png)
