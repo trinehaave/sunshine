@@ -119,10 +119,10 @@ footer {
 
 p.sun-times {
   text-align: left;
-  font-size: 1.8rem;
+  font-size: 1.8em;
   font-family: 'Lato', sans-serif;
   font-weight: 500px;
-  line-height: 115%
+  line-height: 95%
 }
 
 p.search-again {
