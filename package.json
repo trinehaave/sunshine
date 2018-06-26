@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/trinehaave/sunshine#readme",
   "devDependencies": {
-    "standard": "^10.0.2"
+    "standard": "^10.0.3"
   }
 }

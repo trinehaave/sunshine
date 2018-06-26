@@ -52,7 +52,7 @@ jQuery(document).ready(function ($) {
     geoCodeApiKey: 'AIzaSyADtTrg7QCT61wFqPVZfbojoaLjrxS0SWg',
     timeZoneApiKey: 'AIzaSyCma0pv_5pfV9kY8l2eEEfM_w4ydOrNP9w',
     clientIdFoursquare: 'F0U2TBIRD2H3F5V4K34J3MBB0CJGZ1ZWAUOWIPAEK41SQ2C4',
-    clientSecretFoursquare: 'BX2RU23EQDCVDU4FYTUSAOSWNT2KYD0OZA3KTYGOZJFBKQ30'
+    clientSecretFoursquare: '0RECP02DJS4CMO0I3EZQA2Y0XXPG4ZTSBEFZV2BP3REAVJE3'
 
   }
 
@@ -170,15 +170,20 @@ jQuery(document).ready(function ($) {
   // TODO show 'no results' if there is nothing to display
 
   function displayFourResults (data) {
+    console.log(data)
     if (data.response.groups && data.response.groups.length > 0 && data.response.groups[0].items && data.response.groups[0].items.length > 0) {
       for (var i = 0; i < data.response.groups[0].items.length; i++) {
-        if (data.response.groups[0].items[i].venue.photos.groups &&
-          data.response.groups[0].items[i].venue.photos.groups.length > 0 &&
-          data.response.groups[0].items[i].venue.photos.groups[0].items &&
-          data.response.groups[0].items[i].venue.photos.groups[0].items.length > 0) {
-          var startResults = data.response.groups[0].items[i].venue
-          var startImage = data.response.groups[0].items[i].venue.photos.groups[0].items[0]
 
+        // if (data.response.groups[0].items[i].venue.photos.groups &&
+        //   data.response.groups[0].items[i].venue.photos.groups.length > 0 &&
+        //   data.response.groups[0].items[i].venue.photos.groups[0].items &&
+        //   data.response.groups[0].items[i].venue.photos.groups[0].items.length > 0) {
+
+          var startResults = data.response.groups[0].items[i].venue
+
+
+          //stops here - foursqaure has restructured API and now need to make separate API calls using venue_id 
+          var startImage = data.response.groups[0].items[i].venue.photos.groups[0].items[0]
           if (i < 9) {
             if (startResults.name.length < 30) {
               $('.row-1').append('<div class="col-4"><div class="venue-image"><a href=" http://foursquare.com/v/' + startResults.id + '?ref=' + state.client_id + '""><img src="' +
@@ -190,7 +195,6 @@ jQuery(document).ready(function ($) {
                 '<span></h4></a></div></div>')
             } else {
               var venueName = startResults.name.slice(0, 30) + '...'
-
               $('.row-1').append('<div class="col-4"><div class="venue-image"><a href=" http://foursquare.com/v/' + startResults.id + '?ref=' + state.client_id + '""><img src="' +
                 startImage.prefix + '300x300' + startImage.suffix + '" alt="image of ' + startResults.name + ' class="desaturate">' +
                 '<h4><span>' +
@@ -200,7 +204,7 @@ jQuery(document).ready(function ($) {
                 '<span></h4></a></div></div>')
             }
           }
-        }
+        // }
       }
     }
 
